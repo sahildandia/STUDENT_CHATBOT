@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Guidance ChatInfo - AI-Powered Career Counseling</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary: #7C3AED;
+            --accent: #EC4899;
+            --accent-light: #F472B6;
+            --light: #F8FAFC;
+            --dark: #1E293B;
+            --dark-light: #334155;
+            --success: #0EA5E9;
+            --success-light: #38BDF8;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --gray: #64748B;
+            --light-gray: #E2E8F0;
+            --gradient: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
+            --gradient-accent: linear-gradient(135deg, #EC4899 0%, #F59E0B 100%);
+            --gradient-dark: linear-gradient(135deg, #1E293B 0%, #7C3AED 100%);
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            background: linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .background-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.05;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            top: -100px;
+            left: -100px;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            background: var(--accent);
+            bottom: -50px;
+            right: -50px;
+            animation: float 12s infinite ease-in-out reverse;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            background: var(--success);
+            top: 40%;
+            left: 70%;
+            animation: float 10s infinite ease-in-out 2s;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-out, slideDown 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient);
+            animation: expandLine 1.5s ease-out;
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 28px;
+            animation: pulse 2s infinite;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.6rem;
+            margin-bottom: 10px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+            text-shadow: 0 5px 15px rgba(67, 97, 238, 0.1);
+            line-height: 1.2;
+        }
+
+        .tagline {
+            color: var(--gray);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+        }
+
+        .tagline::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: var(--gradient);
+            border-radius: 3px;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .chatbot-container {
+            flex: 1.5;
+            min-width: 300px;
+            max-width: 600px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideInLeft 0.8s ease-out;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        .chat-header {
+            background: var(--gradient);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            flex-wrap: wrap;
+        }
+
+        .chat-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+        }
+
+        .chatbot-avatar {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary);
+            font-size: 20px;
+            animation: float 6s infinite ease-in-out;
+            flex-shrink: 0;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            height: 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="rgba(248, 250, 252, 0.5)"/><path d="M0 0L100 100M100 0L0 100" stroke="%23E2E8F0" stroke-width="0.5"/></svg>');
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            line-height: 1.5;
+            position: relative;
+            animation: messageAppear 0.4s ease-out;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+            transition: transform 0.3s;
+            word-wrap: break-word;
+            font-size: 0.95rem;
+        }
+
+        .message:hover {
+            transform: translateY(-2px);
+        }
+
+        .bot-message {
+            background: white;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            border: 1px solid var(--light-gray);
+        }
+
+        .bot-message::before {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: -10px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 0 15px 15px;
+            border-color: transparent transparent white transparent;
+            transform: rotate(15deg);
+        }
+
+        .user-message {
+            background: var(--gradient);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .user-message::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            right: -10px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 15px 0 0 15px;
+            border-color: transparent transparent transparent var(--primary);
+            transform: rotate(-15deg);
+        }
+
+        .chat-input {
+            padding: 16px;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            gap: 10px;
+            background: white;
+            flex-wrap: wrap;
+        }
+
+        input, select, button {
+            padding: 12px 16px;
+            border: 1px solid var(--light-gray);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        input, select {
+            flex: 1;
+            background: var(--light);
+            min-width: 150px;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .voice-btn {
+            background: var(--accent);
+        }
+
+        .voice-btn:hover {
+            background: #DB2777;
+        }
+
+        .progress-container {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            color: var(--gray);
+            min-width: 100px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            flex: 1;
+            background: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+            min-width: 150px;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--gradient);
+            width: 0%;
+            transition: width 0.5s ease-out;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .features {
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            animation: slideInRight 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient);
+            animation: expandLineVertical 1.5s ease-out;
+        }
+
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .feature-list li:hover {
+            transform: translateX(5px);
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .btn-download {
+            background: var(--success);
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 15px;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-download:hover {
+            background: var(--success-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+            margin-top: 20px;
+            animation: fadeIn 1.5s ease-out;
+            background: var(--card-bg);
+            border-radius: 12px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                max-width: 1000px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            h1 {
+                font-size: 2.3rem;
+            }
+            
+            .chat-messages {
+                height: 350px;
+            }
+            
+            .message {
+                max-width: 80%;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .chatbot-container, .features {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .logo {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .chat-input {
+                flex-direction: column;
+            }
+            
+            .progress-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .progress-text {
+                min-width: auto;
+            }
+            
+            .progress-bar {
+                width: 100%;
+            }
+            
+            .feature-card::before {
+                width: 100%;
+                height: 4px;
+                animation: expandLine 1.5s ease-out;
+            }
+            
+            .chat-header {
+                padding: 14px;
+            }
+            
+            .student-info-panel {
+                width: 90%;
+                right: 5%;
+                left: 5%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            header {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 1.7rem;
+            }
+            
+            .tagline {
+                font-size: 0.95rem;
+            }
+            
+            .chat-messages {
+                padding: 15px;
+                height: 320px;
+            }
+            
+            .message {
+                padding: 10px 14px;
+                font-size: 0.9rem;
+                max-width: 90%;
+            }
+            
+            .feature-card {
+                padding: 18px;
+            }
+            
+            .feature-card h3 {
+                font-size: 1.15rem;
+            }
+            
+            input, select, button {
+                padding: 10px 14px;
+            }
+            
+            .chat-input {
+                padding: 14px;
+            }
+            
+            .student-info-badge {
+                bottom: 15px;
+                right: 15px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .student-info-panel {
+                bottom: 75px;
+                right: 15px;
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .logo-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+            
+            .chat-messages {
+                height: 280px;
+            }
+            
+            .student-info-panel {
+                width: 260px;
+                padding: 15px;
+            }
+        }
+
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .option-button {
+            background: white;
+            color: var(--dark);
+            border: 1px solid var(--light-gray);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option-button:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(37, 99, 235, 0.15);
+        }
+
+        .typing-indicator {
+            display: flex;
+            padding: 12px;
+            background: white;
+            border-radius: 14px;
+            align-self: flex-start;
+            margin-bottom: 8px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--light-gray);
+            align-items: center;
+            gap: 6px;
+        }
+
+        .typing-text {
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--gray);
+            border-radius: 50%;
+            animation: typingAnimation 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .voice-status {
+            text-align: center;
+            padding: 8px;
+            color: var(--gray);
+            font-style: italic;
+            background: rgba(255, 255, 255, 0.7);
+            border-top: 1px solid var(--light-gray);
+            font-size: 0.85rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes messageAppear {
+            from { transform: translateY(8px) scale(0.97); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        @keyframes typingAnimation {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.3); }
+            70% { box-shadow: 0 0 0 12px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(3deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        @keyframes expandLine {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        @keyframes expandLineVertical {
+            from { height: 0%; }
+            to { height: 100%; }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .student-info-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--gradient);
+            color: white;
+            padding: 14px;
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            cursor: pointer;
+            z-index: 100;
+            animation: pulse 2s infinite, float 6s infinite ease-in-out;
+        }
+
+        .student-info-panel {
+            position: fixed;
+            bottom: 85px;
+            right: 20px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: var(--card-shadow);
+            width: 280px;
+            z-index: 99;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            transform: translateY(15px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .student-info-panel.active {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .student-info-panel h3 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--light-gray);
+            font-size: 0.9rem;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .python-integration {
+            background: var(--gradient-dark);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 12px;
+        }
+
+        .python-integration h4 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .code-snippet {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            overflow-x: auto;
+            margin-top: 8px;
+        }
+
+        /* PDF Modal */
+        .pdf-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .pdf-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .pdf-content {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            position: relative;
+            transform: translateY(-40px);
+            transition: transform 0.3s;
+        }
+
+        .pdf-modal.active .pdf-content {
+            transform: translateY(0);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .pdf-preview {
+            margin: 15px 0;
+            padding: 15px;
+            background: var(--light);
+            border-radius: 8px;
+            border: 2px dashed var(--primary);
+        }
+
+        .pdf-download-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .pdf-download-btn:hover {
+            background: var(--success-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h1>Student Guidance ChatInfo</h1>
+            </div>
+            <p class="tagline">AI-Powered Career Counseling with Voice Assistance</p>
+            <p>Discover your ideal career path with our intelligent chatbot and voice assistant</p>
+        </header>
+
+        <div class="main-content">
+            <div class="chatbot-container">
+                <div class="chat-header">
+                    <div class="chatbot-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h2>GuideBot Assistant</h2>
+                    <span class="pulse" style="margin-left: auto; width: 10px; height: 10px; background: #10B981; border-radius: 50%;"></span>
+                    <span>Online</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-text">Profile Completion</div>
+                    <div class="progress-bar">
+                        <div class="progress" id="progress"></div>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message bot-message">
+                        <i class="fas fa-robot" style="margin-right: 5px;"></i> Hello! 👋 I'm GuideBot, your AI Career Counselor. Let's find your perfect career path!
+                    </div>
+                    <div class="message bot-message">
+                        What's your name?
+                    </div>
+                </div>
+                <div class="voice-status" id="voice-status">
+                    Voice assistant: <i class="fas fa-microphone-slash"></i> Off
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="user-input" placeholder="Type your answer here...">
+                    <button id="send-button"><i class="fas fa-paper-plane"></i> Send</button>
+                    <button id="voice-button" class="voice-btn"><i class="fas fa-microphone"></i> Voice</button>
+                </div>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <h3><i class="fas fa-user-graduate"></i> Student Profile</h3>
+                    <div class="student-details">
+                        <div class="info-item">
+                            <span class="info-label">Name:</span>
+                            <span class="info-value" id="profile-name">Not provided</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Academic Level:</span>
+                            <span class="info-value" id="profile-level">Not provided</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Interests:</span>
+                            <span class="info-value" id="profile-interests">Not provided</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Career Match:</span>
+                            <span class="info-value" id="profile-career">Not determined</span>
+                        </div>
+                    </div>
+                    <button class="btn-download" id="download-report"><i class="fas fa-download"></i> Download Full Report</button>
+                </div>
+
+                <div class="feature-card">
+                    <h3><i class="fas fa-graduation-cap"></i> Recommended For You</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check-circle" style="color: var(--success);"></i> Personalized career report</li>
+                        <li><i class="fas fa-check-circle" style="color: var(--success);"></i> College recommendations</li>
+                        <li><i class="fas fa-check-circle" style="color: var(--success);"></i> Course suggestions</li>
+                        <li><i class="fas fa-check-circle" style="color: var(--success);"></i> Skill assessment</li>
+                        <li><i class="fas fa-check-circle" style="color: var(--success);"></i> Scholarship opportunities</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3><i class="fas fa-robot"></i> Python Voice Assistant</h3>
+                    <div class="python-integration">
+                        <h4><i class="fab fa-python"></i> Backend Integration</h4>
+                        <p>Our voice assistant uses Python for natural language processing and advanced career analytics.</p>
+                        <div class="code-snippet">
+                            # Python code example<br>
+                            def analyze_career_path(interests, skills):<br>
+                            &nbsp;&nbsp;# AI analysis happens here<br>
+                            &nbsp;&nbsp;return career_recommendations
+                        </div>
+                    </div>
+                    <p style="margin-top: 15px;">Connect with our Python API for advanced career predictions and voice processing.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2023 Student Guidance ChatInfo | <a href="#">Privacy Policy</a> | <a href="#">Contact Support</a> | <a href="#">Admin Login</a></p>
+            <p>Powered by Python AI Engine & Advanced Voice Processing</p>
+        </footer>
+    </div>
+
+    <div class="student-info-badge" id="info-badge">
+        <i class="fas fa-user-graduate"></i>
+    </div>
+
+    <div class="student-info-panel" id="info-panel">
+        <h3><i class="fas fa-user-circle"></i> Student Info</h3>
+        <div class="info-item">
+            <span class="info-label">Session ID:</span>
+            <span class="info-value">SG-2023-08A5</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Progress:</span>
+            <span class="info-value">20% Complete</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Voice Assistant:</span>
+            <span class="info-value">Ready</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">AI Model:</span>
+            <span class="info-value">GuideBot v2.3</span>
+        </div>
+    </div>
+
+    <!-- PDF Modal -->
+    <div class="pdf-modal" id="pdf-modal">
+        <div class="pdf-content">
+            <button class="close-modal" id="close-modal">&times;</button>
+            <h2><i class="fas fa-file-pdf"></i> Download Career Report</h2>
+            <div class="pdf-preview">
+                <h3>Student Guidance ChatInfo Career Report</h3>
+                <p>This report contains personalized career recommendations based on your profile.</p>
+                <div id="pdf-preview-content">
+                    <p><strong>Student:</strong> <span id="preview-name">Not provided</span></p>
+                    <p><strong>Recommended Career:</strong> <span id="preview-career">Not determined</span></p>
+                    <p><strong>Generated on:</strong> <span id="preview-date"></span></p>
+                </div>
+            </div>
+            <button class="pdf-download-btn" id="generate-pdf">
+                <i class="fas fa-download"></i> Generate & Download PDF
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatMessages = document.getElementById('chat-messages');
+            const userInput = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-button');
+            const voiceButton = document.getElementById('voice-button');
+            const voiceStatus = document.getElementById('voice-status');
+            const progressBar = document.getElementById('progress');
+            const infoBadge = document.getElementById('info-badge');
+            const infoPanel = document.getElementById('info-panel');
+            const downloadReportBtn = document.getElementById('download-report');
+            const pdfModal = document.getElementById('pdf-modal');
+            const closeModal = document.getElementById('close-modal');
+            const generatePdfBtn = document.getElementById('generate-pdf');
+            const previewName = document.getElementById('preview-name');
+            const previewCareer = document.getElementById('preview-career');
+            const previewDate = document.getElementById('preview-date');
+            
+            // Profile elements
+            const profileName = document.getElementById('profile-name');
+            const profileLevel = document.getElementById('profile-level');
+            const profileInterests = document.getElementById('profile-interests');
+            const profileCareer = document.getElementById('profile-career');
+            
+            let currentStep = 0;
+            let userData = {
+                name: '',
+                academicLevel: '',
+                tenthMarks: '',
+                twelfthMarks: '',
+                entranceExam: '',
+                interests: '',
+                location: '',
+                budget: ''
+            };
+            
+            const questions = [
+                "What's your name?",
+                "What's your current academic level?",
+                "What's your 10th standard percentage?",
+                "What's your 12th standard percentage?",
+                "Do you have any entrance exam score? (e.g., JEE, NEET, CET)",
+                "What are your interests? (e.g., Engineering, Medical, Arts, Commerce, Law, Design)",
+                "What is your preferred study location? (state/city)",
+                "What's your budget for higher education? (optional)"
+            ];
+            
+            const academicOptions = ["High School", "12th Pass", "Undergraduate", "Graduate"];
+            const interestOptions = ["Engineering", "Medical", "Arts", "Commerce", "Law", "Design", "Business", "Computer Science", "Other"];
+            
+            // Initialize the chat
+            updateProgress();
+            
+            // Set current date for PDF
+            const currentDate = new Date();
+            previewDate.textContent = currentDate.toLocaleDateString();
+            
+            // Student info panel toggle
+            infoBadge.addEventListener('click', function() {
+                infoPanel.classList.toggle('active');
+            });
+
+            // PDF Download functionality
+            downloadReportBtn.addEventListener('click', function() {
+                previewName.textContent = userData.name || 'Not provided';
+                previewCareer.textContent = profileCareer.textContent;
+                pdfModal.classList.add('active');
+            });
+            
+            closeModal.addEventListener('click', function() {
+                pdfModal.classList.remove('active');
+            });
+            
+            generatePdfBtn.addEventListener('click', function() {
+                generatePDF();
+            });
+            
+            function generatePDF() {
+                // Using jsPDF library
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Add logo and header
+                doc.setFillColor(37, 99, 235);
+                doc.rect(0, 0, 220, 30, 'F');
+                doc.setFontSize(28);
+                doc.setTextColor(255, 255, 255);
+                doc.text('Student Guidance ChatInfo', 105, 20, { align: 'center' });
+                
+                // Report title
+                doc.setFontSize(20);
+                doc.setTextColor(37, 99, 235);
+                doc.text('Career Counseling Report', 105, 45, { align: 'center' });
+                
+                // Student information
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Student Name: ${userData.name || 'Not provided'}`, 20, 60);
+                doc.text(`Academic Level: ${userData.academicLevel || 'Not provided'}`, 20, 70);
+                doc.text(`Interests: ${userData.interests || 'Not provided'}`, 20, 80);
+                doc.text(`10th Percentage: ${userData.tenthMarks || 'Not provided'}`, 20, 90);
+                doc.text(`12th Percentage: ${userData.twelfthMarks || 'Not provided'}`, 20, 100);
+                
+                // Career recommendations
+                doc.setFontSize(16);
+                doc.setTextColor(37, 99, 235);
+                doc.text('Career Recommendations', 20, 120);
+                
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                
+                let careerText = "Based on your profile, we recommend exploring the following career paths:";
+                
+                if (userData.interests) {
+                    if (userData.interests.toLowerCase().includes("engineering")) {
+                        careerText += "\n- Software Engineering\n- Mechanical Engineering\n- Civil Engineering\n- Data Science";
+                    } else if (userData.interests.toLowerCase().includes("medical")) {
+                        careerText += "\n- Medicine\n- Surgery\n- Medical Research\n- Pharmacy";
+                    } else if (userData.interests.toLowerCase().includes("arts")) {
+                        careerText += "\n- Literature\n- History\n- Psychology\n- Journalism";
+                    } else if (userData.interests.toLowerCase().includes("commerce")) {
+                        careerText += "\n- Chartered Accountancy\n- Financial Analysis\n- Business Consulting\n- Banking";
+                    } else {
+                        careerText += "\n- Multiple interdisciplinary career paths based on your diverse interests";
+                    }
+                } else {
+                    careerText += "\nComplete your profile to get personalized career recommendations";
+                }
+                
+                // Split text into lines to fit in PDF
+                const splitText = doc.splitTextToSize(careerText, 170);
+                doc.text(splitText, 20, 130);
+                
+                // Footer
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Report generated on ${currentDate.toLocaleDateString()} by Student Guidance ChatInfo`, 105, 280, { align: 'center' });
+                
+                // Save the PDF
+                doc.save(`Student_Guidance_Report_${userData.name || 'User'}.pdf`);
+                
+                // Close modal
+                pdfModal.classList.remove('active');
+            }
+
+            function appendMessage(message, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message');
+                messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+                
+                if (isUser) {
+                    messageDiv.innerHTML = `<i class="fas fa-user" style="margin-right: 5px;"></i> ${message}`;
+                } else {
+                    messageDiv.innerHTML = `<i class="fas fa-robot" style="margin-right: 5px;"></i> ${message}`;
+                }
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.classList.add('typing-indicator');
+                typingDiv.id = 'typing-indicator';
+                
+                const typingText = document.createElement('div');
+                typingText.classList.add('typing-text');
+                typingText.textContent = "GuideBot is typing";
+                
+                typingDiv.appendChild(typingText);
+                
+                for (let i = 0; i < 3; i++) {
+                    const dot = document.createElement('div');
+                    dot.classList.add('typing-dot');
+                    typingDiv.appendChild(dot);
+                }
+                
+                chatMessages.appendChild(typingDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function removeTypingIndicator() {
+                const typingIndicator = document.getElementById('typing-indicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+            
+            function updateProgress() {
+                const progress = (currentStep / questions.length) * 100;
+                progressBar.style.width = `${progress}%`;
+                
+                // Update student info panel
+                document.querySelector('.info-item:nth-child(2) .info-value').textContent = `${Math.round(progress)}% Complete`;
+            }
+            
+            function showOptions(options) {
+                const optionsContainer = document.createElement('div');
+                optionsContainer.classList.add('options-container');
+                
+                options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.classList.add('option-button');
+                    button.textContent = option;
+                    button.addEventListener('click', function() {
+                        userInput.value = option;
+                        handleUserInput();
+                    });
+                    optionsContainer.appendChild(button);
+                });
+                
+                chatMessages.appendChild(optionsContainer);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function updateProfile() {
+                if (userData.name) profileName.textContent = userData.name;
+                if (userData.academicLevel) profileLevel.textContent = userData.academicLevel;
+                if (userData.interests) profileInterests.textContent = userData.interests;
+                
+                // Simulate career match based on interests
+                if (userData.interests.toLowerCase().includes("engineering")) {
+                    profileCareer.textContent = "Engineering";
+                } else if (userData.interests.toLowerCase().includes("medical")) {
+                    profileCareer.textContent = "Medical";
+                } else if (userData.interests) {
+                    profileCareer.textContent = "Multiple Options";
+                }
+            }
+            
+            function handleUserInput() {
+                const input = userInput.value.trim();
+                if (input === '') return;
+                
+                appendMessage(input, true);
+                userInput.value = '';
+                
+                // Store user data based on current step
+                switch(currentStep) {
+                    case 0:
+                        userData.name = input;
+                        break;
+                    case 1:
+                        userData.academicLevel = input;
+                        break;
+                    case 2:
+                        userData.tenthMarks = input;
+                        break;
+                    case 3:
+                        userData.twelfthMarks = input;
+                        break;
+                    case 4:
+                        userData.entranceExam = input;
+                        break;
+                    case 5:
+                        userData.interests = input;
+                        break;
+                    case 6:
+                        userData.location = input;
+                        break;
+                    case 7:
+                        userData.budget = input;
+                        break;
+                }
+                
+                // Update profile after each input
+                updateProfile();
+                
+                currentStep++;
+                
+                if (currentStep < questions.length) {
+                    // Show typing indicator for 1 second before next question
+                    showTypingIndicator();
+                    
+                    setTimeout(() => {
+                        removeTypingIndicator();
+                        appendMessage(questions[currentStep]);
+                        
+                        // Show options for academic level and interests
+                        if (currentStep === 1) {
+                            showOptions(academicOptions);
+                        } else if (currentStep === 5) {
+                            showOptions(interestOptions);
+                        }
+                    }, 1000);
+                } else {
+                    // All questions answered, provide recommendations
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        removeTypingIndicator();
+                        provideRecommendations();
+                    }, 1500);
+                }
+                
+                updateProgress();
+            }
+            
+            function provideRecommendations() {
+                appendMessage("Thanks for providing all the information, " + userData.name + "!");
+                
+                // Simulate typing
+                showTypingIndicator();
+                
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    appendMessage("Based on your profile, here are my recommendations:");
+                    
+                    // Simulated recommendations based on interests
+                    if (userData.interests.toLowerCase().includes("engineering")) {
+                        appendMessage("🎯 Career Options: Software Engineer, Mechanical Engineer, Civil Engineer, Data Scientist");
+                        appendMessage("📚 Recommended Courses: B.Tech in Computer Science, B.Tech in Mechanical Engineering, B.Tech in Electronics");
+                        appendMessage("🏫 Top Colleges: IIT Bombay, IIT Delhi, BITS Pilani, NIT Trichy");
+                    } else if (userData.interests.toLowerCase().includes("medical")) {
+                        appendMessage("🎯 Career Options: Doctor, Surgeon, Medical Researcher, Pharmacist");
+                        appendMessage("📚 Recommended Courses: MBBS, BDS, BPharm, Biotechnology");
+                        appendMessage("🏫 Top Colleges: AIIMS Delhi, CMC Vellore, AFMC Pune, Maulana Azad Medical College");
+                    } else if (userData.interests.toLowerCase().includes("arts")) {
+                        appendMessage("🎯 Career Options: Writer, Historian, Psychologist, Journalist");
+                        appendMessage("📚 Recommended Courses: BA in English, BA in Psychology, BA in Sociology, BA in History");
+                        appendMessage("🏫 Top Colleges: Lady Shri Ram College, St. Stephen's College, Loyola College, Christ University");
+                    } else if (userData.interests.toLowerCase().includes("commerce")) {
+                        appendMessage("🎯 Career Options: Chartered Accountant, Financial Analyst, Business Consultant, Banker");
+                        appendMessage("📚 Recommended Courses: B.Com, BBA, CA, CS");
+                        appendMessage("🏫 Top Colleges: Shri Ram College of Commerce, Narsee Monjee College, Symbiosis College, Hansraj College");
+                    } else {
+                        appendMessage("🎯 Career Options: Based on your diverse interests, I recommend exploring multiple fields");
+                        appendMessage("📚 Recommended Courses: Consider interdisciplinary programs that combine your interests");
+                        appendMessage("🏫 Top Colleges: Delhi University, Mumbai University, Bangalore University, Amity University");
+                    }
+                    
+                    // Simulate typing
+                    showTypingIndicator();
+                    
+                    setTimeout(() => {
+                        removeTypingIndicator();
+                        appendMessage("You can download your personalized career report using the download button on the right.");
+                        
+                        // Enable voice feedback for the results
+                        if (isVoiceActive) {
+                            speak("Here are your career recommendations. You can download the full report using the download button.");
+                        }
+                    }, 1000);
+                }, 1500);
+            }
+            
+            // Voice assistance functionality
+            let isVoiceActive = false;
+            let recognition;
+            
+            try {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (SpeechRecognition) {
+                    recognition = new SpeechRecognition();
+                    recognition.continuous = false;
+                    recognition.lang = 'en-US';
+                    
+                    recognition.onresult = function(event) {
+                        const transcript = event.results[0][0].transcript;
+                        userInput.value = transcript;
+                        handleUserInput();
+                    };
+                    
+                    recognition.onerror = function(event) {
+                        console.error('Speech recognition error', event.error);
+                        voiceStatus.innerHTML = 'Voice assistant: <i class="fas fa-microphone-slash"></i> Error';
+                        isVoiceActive = false;
+                    };
+                }
+            } catch (e) {
+                console.error("Speech recognition not supported", e);
+                voiceButton.style.display = 'none';
+            }
+            
+            function toggleVoice() {
+                if (!recognition) {
+                    alert("Speech recognition is not supported in your browser. Try Chrome or Edge.");
+                    return;
+                }
+                
+                isVoiceActive = !isVoiceActive;
+                
+                if (isVoiceActive) {
+                    voiceButton.innerHTML = '<i class="fas fa-microphone-slash"></i> Voice';
+                    voiceStatus.innerHTML = 'Voice assistant: <i class="fas fa-microphone"></i> Listening...';
+                    voiceButton.style.background = '#DB2777';
+                    try {
+                        recognition.start();
+                    } catch (e) {
+                        console.error("Recognition start error", e);
+                    }
+                } else {
+                    voiceButton.innerHTML = '<i class="fas fa-microphone"></i> Voice';
+                    voiceStatus.innerHTML = 'Voice assistant: <i class="fas fa-microphone-slash"></i> Off';
+                    voiceButton.style.background = '';
+                    try {
+                        recognition.stop();
+                    } catch (e) {
+                        console.error("Recognition stop error", e);
+                    }
+                }
+            }
+            
+            function speak(text) {
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1.0;
+                    window.speechSynthesis.speak(utterance);
+                }
+            }
+            
+            // Event listeners
+            sendButton.addEventListener('click', handleUserInput);
+            
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleUserInput();
+                }
+            });
+            
+            voiceButton.addEventListener('click', toggleVoice);
+            
+            // Initial greeting with voice option
+            setTimeout(() => {
+                if (confirm("Would you like to enable voice assistance for a better experience?")) {
+                    toggleVoice();
+                    speak("Hello! I'm GuideBot, your AI Career Counselor. Let's find the best career path for you!");
+                }
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
